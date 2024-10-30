@@ -5,7 +5,7 @@ const config = {
   width: 840,
   height: 650,
   parent: "game-container",
-  backgroundColor: '#028af8',
+  backgroundColor: "#028af8",
   scale: {
     mode: Phaser.Scale.NONE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
