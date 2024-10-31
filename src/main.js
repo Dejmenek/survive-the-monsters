@@ -7,6 +7,12 @@ const config = {
   type: Phaser.AUTO,
   width: 840,
   height: 650,
+  physics: {
+    default: "matter",
+    matter: {
+      debug: true, // Optional, for visual debugging
+    },
+  },
   parent: "game-container",
   backgroundColor: "#028af8",
   scale: {
