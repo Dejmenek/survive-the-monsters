@@ -96,7 +96,7 @@ export default class Player {
     this.scene.input.on(
       "pointermove",
       function (pointer) {
-        if (this.input.mouse.locked) {
+        if (this.scene.input.mouse.locked) {
           this.reticle.x += pointer.movementX;
           this.reticle.y += pointer.movementY;
         }
