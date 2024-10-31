@@ -64,7 +64,6 @@ export default class Game extends Phaser.Scene {
 
   addZombie(x, y) {
     const zombie = new Zombie(this, x, y);
-    console.log("Zombie added at position:", x, y);
     this.zombies.push(zombie);
   }
 
