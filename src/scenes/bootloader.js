@@ -6,6 +6,7 @@ export default class Bootloader extends Phaser.Scene {
   preload() {
     this.createBars();
     this.setLoadEvents();
+    this.loadImages();
     this.loadSprites();
     this.loadAudios();
     this.loadMaps();
@@ -34,6 +35,10 @@ export default class Bootloader extends Phaser.Scene {
       },
       this
     );
+  }
+
+  loadImages() {
+    this.load.image("target", "assets/images/player/gun-pointer.png");
   }
 
   loadSprites() {
