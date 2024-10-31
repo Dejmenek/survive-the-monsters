@@ -5,7 +5,7 @@ export default class Game extends Phaser.Scene {
   constructor() {
     super({ key: "game" });
     this.player = null;
-    this.zombie = null;
+    this.zombies = null;
   }
 
   init(data) {
@@ -20,15 +20,58 @@ export default class Game extends Phaser.Scene {
     this.centerWidth = this.width / 2;
     this.centerHeight = this.height / 2;
 
+    this.zombies = [];
     this.addPlayer();
-    this.addZombie();
+    this.startZombieSpawn();
+  }
+
+  update() {
+    this.zombies.forEach((zombie) => {
+      zombie.update(this.player.sprite.x, this.player.sprite.y);
+    });
   }
 
   addPlayer() {
     this.player = new Player(this, this.centerWidth, this.centerHeight);
   }
 
-  addZombie() {
-    this.zombie = new Zombie(this, 200, 120);
+  startZombieSpawn() {
+    this.time.addEvent({
+      delay: Phaser.Math.Between(1000, 5000),
+      callback: this.spawnZombie,
+      callbackScope: this,
+      loop: true,
+    });
+  }
+
+  spawnZombie() {
+    const minDistance = 50;
+    let spawnPosition = this.getRandomPosition();
+
+    while (
+      Phaser.Math.Distance.Between(
+        spawnPosition.x,
+        spawnPosition.y,
+        this.player.sprite.x,
+        this.player.sprite.y
+      ) < minDistance
+    ) {
+      spawnPosition = this.getRandomPosition();
+    }
+
+    this.addZombie(spawnPosition.x, spawnPosition.y);
+  }
+
+  addZombie(x, y) {
+    const zombie = new Zombie(this, x, y);
+    console.log("Zombie added at position:", x, y);
+    this.zombies.push(zombie);
+  }
+
+  getRandomPosition() {
+    const x = Phaser.Math.Between(0, this.cameras.main.width);
+    const y = Phaser.Math.Between(0, this.cameras.main.height);
+
+    return { x, y };
   }
 }
