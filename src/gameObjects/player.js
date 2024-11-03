@@ -14,21 +14,11 @@ export default class Player {
     const { width: w, height: h } = this.sprite;
     const mainBody = Bodies.rectangle(0, 0, w * 0.6, h, {
       chamfer: { radius: 10 },
+      label: "player",
     });
-    this.sensors = {
-      top: Bodies.rectangle(0, -h * 0.5, w * 0.5, 2, { isSensor: true }),
-      bottom: Bodies.rectangle(0, h * 0.5, w * 0.5, 2, { isSensor: true }),
-      left: Bodies.rectangle(-w * 0.35, 0, 2, h * 0.7, { isSensor: true }),
-      right: Bodies.rectangle(w * 0.35, 0, 2, h * 0.7, { isSensor: true }),
-    };
+
     const compoundBody = Body.create({
-      parts: [
-        mainBody,
-        this.sensors.top,
-        this.sensors.bottom,
-        this.sensors.left,
-        this.sensors.right,
-      ],
+      parts: [mainBody],
       frictionStatic: 0,
       frictionAir: 0.02,
       friction: 0.1,
@@ -36,8 +26,8 @@ export default class Player {
     });
     this.sprite
       .setExistingBody(compoundBody)
-      .setPosition(x, y)
       .setIgnoreGravity(true)
+      .setPosition(x, y)
       .setOrigin(0.4, 0.6);
     this.reticle = this.scene.add.sprite(x, y, "target").setOrigin(0.5, 0.5);
     this.reticle.setDepth(10);
