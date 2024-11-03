@@ -34,6 +34,11 @@ export default class Game extends Phaser.Scene {
   addPlayer() {
     this.player = new Player(this, this.centerWidth, this.centerHeight);
   }
+  gameOver() {
+    this.matter.pause(); 
+    this.scene.start("gameOver");
+    this.scene.stop();
+  }
 
   startZombieSpawn() {
     this.time.addEvent({
