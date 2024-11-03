@@ -36,6 +36,14 @@ export default class Player {
 
   addEvents() {
     this.scene.events.on("update", this.update, this);
+    this.scene.events.on("shutdown", this.destroy, this);
+  }
+
+  destroy() {
+    this.scene.events.off("update", this.update, this);
+    this.scene.events.off("shutdown", this.destroy, this);
+
+    this.sprite.destroy();
   }
 
   update() {

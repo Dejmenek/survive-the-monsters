@@ -21,6 +21,7 @@ export default class Splash extends Phaser.Scene {
   startGame() {
     if (this.theme) this.theme.stop();
     this.scene.start("game");
+    this.scene.stop();
   }
 
   playMusic(theme = "splash") {
