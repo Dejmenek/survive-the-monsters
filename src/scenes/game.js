@@ -23,6 +23,7 @@ export default class Game extends Phaser.Scene {
     this.zombies = [];
     this.addPlayer();
     this.startZombieSpawn();
+    this.addCollisions();
   }
 
   update() {
@@ -33,6 +34,23 @@ export default class Game extends Phaser.Scene {
 
   addPlayer() {
     this.player = new Player(this, this.centerWidth, this.centerHeight);
+  }
+
+  addCollisions() {
+    this.matter.world.on("collisionstart", (event, bodyA, bodyB) => {
+      if (
+        (bodyA.label == "zombie" && bodyB.label == "player") ||
+        (bodyA.label == "player" && bodyB.label == "zombie")
+      ) {
+        this.gameOver();
+      }
+    });
+  }
+
+  gameOver() {
+    this.matter.pause(); 
+    this.scene.start("gameOver");
+    this.scene.stop();
   }
 
   startZombieSpawn() {
