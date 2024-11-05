@@ -1,5 +1,5 @@
-import Bullet from "./bullet";
-import { PLAYER_CATEGORY, ZOMBIE_CATEGORY } from "../collisionCategories";
+import Bullet from "./bullet.js";
+import { PLAYER_CATEGORY, ZOMBIE_CATEGORY } from "../collisionCategories.js";
 
 export default class Player {
   constructor(scene, x, y) {

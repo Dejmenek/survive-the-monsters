@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import Bootloader from "./scenes/bootloader";
-import Splash from "./scenes/splash";
-import Game from "./scenes/game";
-import GameOver from "./scenes/gameOver";
+import Bootloader from "./scenes/bootloader.js";
+import Splash from "./scenes/splash.js";
+import Game from "./scenes/game.js";
+import GameOver from "./scenes/gameOver.js";
 
 const config = {
   type: Phaser.AUTO,

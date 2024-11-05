@@ -1,4 +1,4 @@
-import { BULLET_CATEGORY, ZOMBIE_CATEGORY } from "../collisionCategories";
+import { BULLET_CATEGORY, ZOMBIE_CATEGORY } from "../collisionCategories.js";
 
 export default class Bullet {
   constructor(scene) {

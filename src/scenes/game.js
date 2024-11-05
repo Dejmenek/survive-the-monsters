@@ -1,5 +1,5 @@
-import Player from "../gameObjects/player";
-import Zombie from "../gameObjects/zombie";
+import Player from "../gameObjects/player.js";
+import Zombie from "../gameObjects/zombie.js";
 
 export default class Game extends Phaser.Scene {
   constructor() {

@@ -2,8 +2,8 @@ import {
   ZOMBIE_CATEGORY,
   PLAYER_CATEGORY,
   BULLET_CATEGORY,
-} from "../collisionCategories";
-import HealthBar from "./healthBar";
+} from "../collisionCategories.js";
+import HealthBar from "./healthBar.js";
 
 export default class Zombie {
   constructor(scene, x, y) {
