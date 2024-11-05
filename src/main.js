@@ -1,4 +1,4 @@
-import Phaser from "../node_modules/phaser/dist/phaser.js";
+import Phaser from "../node_modules/phaser";
 import Bootloader from "./scenes/bootloader.js";
 import Splash from "./scenes/splash.js";
 import Game from "./scenes/game.js";
