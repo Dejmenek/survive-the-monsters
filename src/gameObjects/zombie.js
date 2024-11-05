@@ -1,12 +1,26 @@
+import {
+  ZOMBIE_CATEGORY,
+  PLAYER_CATEGORY,
+  BULLET_CATEGORY,
+} from "../collisionCategories";
+import HealthBar from "./healthBar";
+
 export default class Zombie {
   constructor(scene, x, y) {
     this.scene = scene;
     this.speed = 1;
+    this.health = 3;
     this.init(x, y);
+    this.scene.events.on("update", this.update, this);
+    this.healthBar = new HealthBar(scene, x, y - 30, this.health);
   }
 
   init(x, y) {
     this.sprite = this.scene.matter.add.sprite(0, 0, "zombie", 0);
+    this.sprite.setData("instance", this);
+
+    this.sprite.setCollisionGroup(ZOMBIE_CATEGORY);
+    this.sprite.setCollidesWith([PLAYER_CATEGORY, BULLET_CATEGORY]);
 
     const { Body, Bodies } = Phaser.Physics.Matter.Matter;
     const { width: w, height: h } = this.sprite;
@@ -22,6 +36,7 @@ export default class Zombie {
       friction: 0.1,
       render: { sprite: { xOffset: 0.5, yOffset: 0.5 } },
     });
+
     this.sprite
       .setExistingBody(compoundBody)
       .setPosition(x, y)
@@ -29,7 +44,15 @@ export default class Zombie {
       .setOrigin(0.5, 0.55);
   }
 
+  takeDamage() {
+    this.health--;
+    this.healthBar.updateHealthBar();
+
+    if (this.health <= 0) this.destroy();
+  }
+
   update(playerX, playerY) {
+    if (!this.sprite) return;
     const directionX = playerX - this.sprite.x;
     const directionY = playerY - this.sprite.y;
 
@@ -57,5 +80,15 @@ export default class Zombie {
 
     this.sprite.x = Phaser.Math.Clamp(this.sprite.x, minX, maxX);
     this.sprite.y = Phaser.Math.Clamp(this.sprite.y, minY, maxY);
+
+    this.healthBar.setPosition(this.sprite.x, this.sprite.y - 30);
+  }
+
+  destroy() {
+    this.scene.events.off("update", this.update, this);
+    this.scene.removeZombie(this);
+    this.sprite.destroy();
+    this.healthBar.removeHealthBar();
+    this.sprite = null;
   }
 }

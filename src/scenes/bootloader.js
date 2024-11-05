@@ -50,6 +50,10 @@ export default class Bootloader extends Phaser.Scene {
         frameHeight: 62,
       }
     );
+    this.load.spritesheet("bullet", "assets/images/player/bullet.png", {
+      frameWidth: 37,
+      frameHeight: 21,
+    });
     this.load.spritesheet(
       "zombie",
       "assets/images/zombie/skeleton-idle_0.png",
@@ -62,6 +66,7 @@ export default class Bootloader extends Phaser.Scene {
 
   loadAudios() {
     this.load.audio("splash", "assets/sounds/menuTheme.mp3");
+    this.load.audio("shot", "assets/sounds/sniper_rifle_single_shot.mp3");
   }
 
   loadMaps() {

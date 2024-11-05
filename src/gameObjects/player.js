@@ -1,3 +1,6 @@
+import Bullet from "./bullet";
+import { PLAYER_CATEGORY, ZOMBIE_CATEGORY } from "../collisionCategories";
+
 export default class Player {
   constructor(scene, x, y) {
     this.scene = scene;
@@ -9,6 +12,8 @@ export default class Player {
 
   init(x, y) {
     this.sprite = this.scene.matter.add.sprite(0, 0, "player", 0);
+    this.sprite.setCollisionGroup(PLAYER_CATEGORY);
+    this.sprite.setCollidesWith([ZOMBIE_CATEGORY]); 
 
     const { Body, Bodies } = Phaser.Physics.Matter.Matter;
     const { width: w, height: h } = this.sprite;
@@ -24,11 +29,13 @@ export default class Player {
       friction: 0.1,
       render: { sprite: { xOffset: 0.5, yOffset: 0.5 } },
     });
+
     this.sprite
       .setExistingBody(compoundBody)
       .setIgnoreGravity(true)
       .setPosition(x, y)
       .setOrigin(0.4, 0.6);
+
     this.reticle = this.scene.add.sprite(x, y, "target").setOrigin(0.5, 0.5);
     this.reticle.setDepth(10);
     this.addEvents();
@@ -79,6 +86,7 @@ export default class Player {
       pointer.x,
       pointer.y
     );
+
     this.sprite.setRotation(angle);
 
     this.reticle.setPosition(pointer.x, pointer.y);
@@ -93,7 +101,7 @@ export default class Player {
 
     this.scene.input.on(
       "pointermove",
-      function (pointer) {
+      (pointer) => {
         if (this.scene.input.mouse.locked) {
           this.reticle.x += pointer.movementX;
           this.reticle.y += pointer.movementY;
@@ -101,5 +109,12 @@ export default class Player {
       },
       this
     );
+
+    this.scene.input.on("pointerdown", (pointer) => {
+      const bullet = new Bullet(this.scene);
+      this.scene.bullets.push(bullet);
+      bullet.fire(this.sprite, this.reticle);
+      this.scene.playAudio("shot");
+    });
   }
 }

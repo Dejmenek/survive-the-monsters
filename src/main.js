@@ -11,7 +11,7 @@ const config = {
   physics: {
     default: "matter",
     matter: {
-      debug: true, // Optional, for visual debugging
+      debug: false, // Optional, for visual debugging
     },
   },
   parent: "game-container",

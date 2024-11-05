@@ -6,6 +6,10 @@ export default class Game extends Phaser.Scene {
     super({ key: "game" });
     this.player = null;
     this.zombies = null;
+    this.bullets = null;
+    this.score = 0;
+    this.timer = 0;
+    this.timerRunning = false;
   }
 
   init(data) {
@@ -20,16 +24,65 @@ export default class Game extends Phaser.Scene {
     this.centerWidth = this.width / 2;
     this.centerHeight = this.height / 2;
 
+    this.timerText = this.add
+      .text(10, 10, "Time: 0", {
+        fontSize: "32px",
+        fill: "#000",
+        fontStyle: "Bold",
+      })
+      .setDepth(20);
+
+    this.scoreText = this.add
+      .text(10, 50, "Score: 0", {
+        fontSize: "32px",
+        fill: "#000",
+        fontStyle: "Bold",
+      })
+      .setDepth(20);
+    this.startTimer();
+
     this.zombies = [];
+    this.bullets = [];
+    this.loadAudios();
     this.addPlayer();
     this.startZombieSpawn();
     this.addCollisions();
   }
 
   update() {
+    if (this.timerRunning) {
+      this.timerText.setText(`Time: ${this.timer}`);
+    }
     this.zombies.forEach((zombie) => {
       zombie.update(this.player.sprite.x, this.player.sprite.y);
     });
+  }
+
+  startTimer() {
+    this.timerRunning = true;
+    this.timer = 0;
+    this.time.addEvent({
+      delay: 1000,
+      callback: this.updateTimer,
+      callbackScope: this,
+      loop: true,
+    });
+  }
+
+  stopTimer() {
+    this.timerRunning = false;
+    this.time.removeAllEvents();
+  }
+
+  updateTimer() {
+    if (this.timerRunning) {
+      this.timer += 1;
+    }
+  }
+
+  incrementScore() {
+    this.score += 10;
+    this.scoreText.setText(`Score: ${this.score}`);
   }
 
   addPlayer() {
@@ -44,13 +97,54 @@ export default class Game extends Phaser.Scene {
       ) {
         this.gameOver();
       }
+
+      if (bodyA.label === "zombie" && bodyB.label === "bullet") {
+        this.playerHitsZombie(bodyA);
+        this.destroyBullet(bodyB);
+      }
+
+      if (bodyA.label === "bullet" && bodyB.label === "zombie") {
+        this.playerHitsZombie(bodyB);
+        this.destroyBullet(bodyA);
+      }
     });
   }
 
+  destroyBullet(bulletBody) {
+    const bulletInstance = bulletBody.gameObject.getData("instance");
+    bulletInstance.destroy();
+    this.removeBullet(bulletInstance);
+  }
+
+  playerHitsZombie(zombieBody) {
+    const zombieInstance = zombieBody.gameObject.getData("instance");
+    zombieInstance.takeDamage();
+
+    if (zombieInstance.health <= 0) this.incrementScore();
+  }
+
+  removeZombie(zombie) {
+    const index = this.zombies.indexOf(zombie);
+    if (index > -1) {
+      this.zombies.splice(index, 1);
+    }
+  }
+
+  removeBullet(bullet) {
+    const index = this.bullets.indexOf(bullet);
+    if (index > -1) {
+      this.bullets.splice(index, 1);
+    }
+  }
+
   gameOver() {
-    this.matter.pause(); 
-    this.scene.start("gameOver");
+    this.stopTimer();
+    this.score = 0;
     this.scene.stop();
+    this.matter.pause();
+    this.zombies.slice().forEach((zombie) => zombie.destroy());
+    this.bullets.slice().forEach((bullet) => bullet.destroy());
+    this.scene.start("gameOver");
   }
 
   startZombieSpawn() {
@@ -90,5 +184,15 @@ export default class Game extends Phaser.Scene {
     const y = Phaser.Math.Between(0, this.cameras.main.height);
 
     return { x, y };
+  }
+
+  loadAudios() {
+    this.audios = {
+      shot: this.sound.add("shot", { volume: 0.4, loop: false, detune: 0 }),
+    };
+  }
+
+  playAudio(key) {
+    this.audios[key].play();
   }
 }
