@@ -2,7 +2,10 @@ export default class Zombie {
   constructor(scene, x, y) {
     this.scene = scene;
     this.speed = 1;
+    this.health = 3;
     this.init(x, y);
+    this.scene.events.on("update", this.update, this);
+    this.healthBar = new HealthBar(scene, x, y - 30, this.health);
   }
 
   init(x, y) {
@@ -57,5 +60,7 @@ export default class Zombie {
 
     this.sprite.x = Phaser.Math.Clamp(this.sprite.x, minX, maxX);
     this.sprite.y = Phaser.Math.Clamp(this.sprite.y, minY, maxY);
+
+    this.healthBar.setPosition(this.sprite.x, this.sprite.y - 30);
   }
 }
