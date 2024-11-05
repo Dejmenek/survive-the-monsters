@@ -1,3 +1,10 @@
+import {
+  ZOMBIE_CATEGORY,
+  PLAYER_CATEGORY,
+  BULLET_CATEGORY,
+} from "../collisionCategories";
+import HealthBar from "./healthBar";
+
 export default class Zombie {
   constructor(scene, x, y) {
     this.scene = scene;
@@ -10,6 +17,10 @@ export default class Zombie {
 
   init(x, y) {
     this.sprite = this.scene.matter.add.sprite(0, 0, "zombie", 0);
+    this.sprite.setData("instance", this);
+
+    this.sprite.setCollisionGroup(ZOMBIE_CATEGORY);
+    this.sprite.setCollidesWith([PLAYER_CATEGORY, BULLET_CATEGORY]);
 
     const { Body, Bodies } = Phaser.Physics.Matter.Matter;
     const { width: w, height: h } = this.sprite;
