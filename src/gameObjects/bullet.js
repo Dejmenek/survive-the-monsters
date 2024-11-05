@@ -72,6 +72,7 @@ export default class Bullet {
 
   destroy() {
     this.scene.events.off("update", this.update, this);
+    this.scene.removeBullet(this);
     this.sprite.destroy();
     this.sprite = null;
   }

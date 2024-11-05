@@ -112,6 +112,7 @@ export default class Player {
 
     this.scene.input.on("pointerdown", (pointer) => {
       const bullet = new Bullet(this.scene);
+      this.scene.bullets.push(bullet);
       bullet.fire(this.sprite, this.reticle);
       this.scene.playAudio("shot");
     });

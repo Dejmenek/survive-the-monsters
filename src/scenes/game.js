@@ -6,6 +6,7 @@ export default class Game extends Phaser.Scene {
     super({ key: "game" });
     this.player = null;
     this.zombies = null;
+    this.bullets = null;
   }
 
   init(data) {
@@ -21,6 +22,7 @@ export default class Game extends Phaser.Scene {
     this.centerHeight = this.height / 2;
 
     this.zombies = [];
+    this.bullets = [];
     this.loadAudios();
     this.addPlayer();
     this.startZombieSpawn();
@@ -61,6 +63,7 @@ export default class Game extends Phaser.Scene {
   destroyBullet(bulletBody) {
     const bulletInstance = bulletBody.gameObject.getData("instance");
     bulletInstance.destroy();
+    this.removeBullet(bulletInstance);
   }
 
   playerHitsZombie(zombieBody) {
@@ -75,10 +78,18 @@ export default class Game extends Phaser.Scene {
     }
   }
 
+  removeBullet(bullet) {
+    const index = this.bullets.indexOf(bullet);
+    if (index > -1) {
+      this.bullets.splice(index, 1);
+    }
+  }
+
   gameOver() {
     this.scene.stop();
     this.matter.pause();
     this.zombies.slice().forEach((zombie) => zombie.destroy());
+    this.bullets.slice().forEach((bullet) => bullet.destroy());
     this.scene.start("gameOver");
   }
 
@@ -123,7 +134,7 @@ export default class Game extends Phaser.Scene {
 
   loadAudios() {
     this.audios = {
-      shot: this.sound.add("shot", { volume: 0.4, loop: false, detune: 0}),
+      shot: this.sound.add("shot", { volume: 0.4, loop: false, detune: 0 }),
     };
   }
 
