@@ -35,6 +35,7 @@ export default class Bullet {
     this.sprite
       .setExistingBody(compoundBody)
       .setPosition(x, y)
+      .setOrigin(0.5, 0.5)
       .setIgnoreGravity(true);
   }
 
