@@ -66,6 +66,7 @@ export default class Bootloader extends Phaser.Scene {
 
   loadAudios() {
     this.load.audio("splash", "assets/sounds/menuTheme.mp3");
+    this.load.audio("shot", "assets/sounds/sniper_rifle_single_shot.mp3");
   }
 
   loadMaps() {

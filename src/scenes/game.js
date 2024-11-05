@@ -21,6 +21,7 @@ export default class Game extends Phaser.Scene {
     this.centerHeight = this.height / 2;
 
     this.zombies = [];
+    this.loadAudios();
     this.addPlayer();
     this.startZombieSpawn();
     this.addCollisions();
@@ -90,5 +91,15 @@ export default class Game extends Phaser.Scene {
     const y = Phaser.Math.Between(0, this.cameras.main.height);
 
     return { x, y };
+  }
+
+  loadAudios() {
+    this.audios = {
+      shot: this.sound.add("shot", { volume: 0.4, loop: false, detune: 0}),
+    };
+  }
+
+  playAudio(key) {
+    this.audios[key].play();
   }
 }
