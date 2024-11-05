@@ -7,6 +7,9 @@ export default class Game extends Phaser.Scene {
     this.player = null;
     this.zombies = null;
     this.bullets = null;
+    this.score = 0;
+    this.timer = 0;
+    this.timerRunning = false;
   }
 
   init(data) {
@@ -21,6 +24,23 @@ export default class Game extends Phaser.Scene {
     this.centerWidth = this.width / 2;
     this.centerHeight = this.height / 2;
 
+    this.timerText = this.add
+      .text(10, 10, "Time: 0", {
+        fontSize: "32px",
+        fill: "#000",
+        fontStyle: "Bold",
+      })
+      .setDepth(20);
+
+    this.scoreText = this.add
+      .text(10, 50, "Score: 0", {
+        fontSize: "32px",
+        fill: "#000",
+        fontStyle: "Bold",
+      })
+      .setDepth(20);
+    this.startTimer();
+
     this.zombies = [];
     this.bullets = [];
     this.loadAudios();
@@ -30,9 +50,39 @@ export default class Game extends Phaser.Scene {
   }
 
   update() {
+    if (this.timerRunning) {
+      this.timerText.setText(`Time: ${this.timer}`);
+    }
     this.zombies.forEach((zombie) => {
       zombie.update(this.player.sprite.x, this.player.sprite.y);
     });
+  }
+
+  startTimer() {
+    this.timerRunning = true;
+    this.timer = 0;
+    this.time.addEvent({
+      delay: 1000,
+      callback: this.updateTimer,
+      callbackScope: this,
+      loop: true,
+    });
+  }
+
+  stopTimer() {
+    this.timerRunning = false;
+    this.time.removeAllEvents();
+  }
+
+  updateTimer() {
+    if (this.timerRunning) {
+      this.timer += 1;
+    }
+  }
+
+  incrementScore() {
+    this.score += 10;
+    this.scoreText.setText(`Score: ${this.score}`);
   }
 
   addPlayer() {
@@ -69,6 +119,8 @@ export default class Game extends Phaser.Scene {
   playerHitsZombie(zombieBody) {
     const zombieInstance = zombieBody.gameObject.getData("instance");
     zombieInstance.takeDamage();
+
+    if (zombieInstance.health <= 0) this.incrementScore();
   }
 
   removeZombie(zombie) {
@@ -86,6 +138,8 @@ export default class Game extends Phaser.Scene {
   }
 
   gameOver() {
+    this.stopTimer();
+    this.score = 0;
     this.scene.stop();
     this.matter.pause();
     this.zombies.slice().forEach((zombie) => zombie.destroy());
