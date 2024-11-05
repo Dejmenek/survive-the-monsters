@@ -36,6 +36,7 @@ export default class Zombie {
       friction: 0.1,
       render: { sprite: { xOffset: 0.5, yOffset: 0.5 } },
     });
+
     this.sprite
       .setExistingBody(compoundBody)
       .setPosition(x, y)
@@ -43,7 +44,15 @@ export default class Zombie {
       .setOrigin(0.5, 0.55);
   }
 
+  takeDamage() {
+    this.health--;
+    this.healthBar.updateHealthBar();
+
+    if (this.health <= 0) this.destroy();
+  }
+
   update(playerX, playerY) {
+    if (!this.sprite) return;
     const directionX = playerX - this.sprite.x;
     const directionY = playerY - this.sprite.y;
 
@@ -73,5 +82,13 @@ export default class Zombie {
     this.sprite.y = Phaser.Math.Clamp(this.sprite.y, minY, maxY);
 
     this.healthBar.setPosition(this.sprite.x, this.sprite.y - 30);
+  }
+
+  destroy() {
+    this.scene.events.off("update", this.update, this);
+    this.scene.removeZombie(this);
+    this.sprite.destroy();
+    this.healthBar.removeHealthBar();
+    this.sprite = null;
   }
 }

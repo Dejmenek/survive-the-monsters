@@ -45,13 +45,41 @@ export default class Game extends Phaser.Scene {
       ) {
         this.gameOver();
       }
+
+      if (bodyA.label === "zombie" && bodyB.label === "bullet") {
+        this.playerHitsZombie(bodyA);
+        this.destroyBullet(bodyB);
+      }
+
+      if (bodyA.label === "bullet" && bodyB.label === "zombie") {
+        this.playerHitsZombie(bodyB);
+        this.destroyBullet(bodyA);
+      }
     });
   }
 
+  destroyBullet(bulletBody) {
+    const bulletInstance = bulletBody.gameObject.getData("instance");
+    bulletInstance.destroy();
+  }
+
+  playerHitsZombie(zombieBody) {
+    const zombieInstance = zombieBody.gameObject.getData("instance");
+    zombieInstance.takeDamage();
+  }
+
+  removeZombie(zombie) {
+    const index = this.zombies.indexOf(zombie);
+    if (index > -1) {
+      this.zombies.splice(index, 1);
+    }
+  }
+
   gameOver() {
-    this.matter.pause(); 
-    this.scene.start("gameOver");
     this.scene.stop();
+    this.matter.pause();
+    this.zombies.slice().forEach((zombie) => zombie.destroy());
+    this.scene.start("gameOver");
   }
 
   startZombieSpawn() {
