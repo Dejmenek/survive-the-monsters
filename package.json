@@ -17,5 +17,6 @@
   },
   "dependencies": {
     "phaser": "^3.86.0"
-  }
+  },
+  "homepage": "/survive-the-monsters"
 }
