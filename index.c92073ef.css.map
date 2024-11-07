@@ -1,0 +1,1 @@
+{"mappings":"AAAA;;;;AAIA","sources":["src/css/style.css"],"sourcesContent":[":root {\r\n  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;\r\n}\r\n\r\n#game-container {\r\n  cursor: none;\r\n}\r\n"],"names":[],"version":3,"file":"index.c92073ef.css.map","sourceRoot":"/__parcel_source_root/"}
