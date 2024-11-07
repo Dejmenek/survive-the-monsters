@@ -6,7 +6,7 @@
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build",
+    "build": "parcel build --public-url ./",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
@@ -17,6 +17,5 @@
   },
   "dependencies": {
     "phaser": "^3.86.0"
-  },
-  "homepage": "/survive-the-monsters"
+  }
 }
